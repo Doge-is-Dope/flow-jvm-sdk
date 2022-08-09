@@ -62,16 +62,16 @@ dependencies {
 
 tasks {
 
-    test {
-        useJUnitPlatform()
-        testLogging {
-            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
-            showExceptions = true
-            showStackTraces = true
-            showCauses = true
-        }
-        finalizedBy("jacocoTestReport")
-    }
+//    test {
+//        useJUnitPlatform()
+//        testLogging {
+//            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+//            showExceptions = true
+//            showStackTraces = true
+//            showCauses = true
+//        }
+//        finalizedBy("jacocoTestReport")
+//    }
 
     compileKotlin {
         sourceCompatibility = javaTargetVersion
@@ -168,7 +168,7 @@ tasks {
             create<MavenPublication>("mavenJava") {
                 from(project.components["java"])
                 groupId = "com.portto"
-                artifactId = "flow-jvm-sdj"
+                artifactId = "flow-jvm-sdk"
                 version = "0.0.1"
 
 
