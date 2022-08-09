@@ -165,31 +165,33 @@ tasks {
         publications {
             create<MavenPublication>("mavenJava") {
                 from(project.components["java"])
-                artifact(documentationJar)
-                artifact(sourcesJar)
 
-                pom {
-                    licenses {
-                        license {
-                            name.set("The Apache License, Version 2.0")
-                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                        }
-                    }
-                    name.set(project.name)
-                    url.set("https://onflow.org")
-                    description.set("The Flow Blockchain JVM SDK")
-                    scm {
-                        url.set("https://github.com/onflow/flow")
-                        connection.set("scm:git:git@github.com/onflow/flow-jvm-sdk.git")
-                        developerConnection.set("scm:git:git@github.com/onflow/flow-jvm-sdk.git")
-                    }
-                    developers {
-                        developer {
-                            name.set("Flow Developers")
-                            url.set("https://onflow.org")
-                        }
-                    }
-                }
+
+//                artifact(documentationJar)
+//                artifact(sourcesJar)
+//
+//                pom {
+//                    licenses {
+//                        license {
+//                            name.set("The Apache License, Version 2.0")
+//                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+//                        }
+//                    }
+//                    name.set(project.name)
+//                    url.set("https://onflow.org")
+//                    description.set("The Flow Blockchain JVM SDK")
+//                    scm {
+//                        url.set("https://github.com/onflow/flow")
+//                        connection.set("scm:git:git@github.com/onflow/flow-jvm-sdk.git")
+//                        developerConnection.set("scm:git:git@github.com/onflow/flow-jvm-sdk.git")
+//                    }
+//                    developers {
+//                        developer {
+//                            name.set("Flow Developers")
+//                            url.set("https://onflow.org")
+//                        }
+//                    }
+//                }
             }
         }
     }
