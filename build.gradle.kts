@@ -127,17 +127,17 @@ tasks {
         )
     }
 
-    val documentationJar by creating(Jar::class) {
-        dependsOn(dokkaHtml)
-        archiveClassifier.set("javadoc")
-        from(dokkaHtml.get().outputs)
-    }
-
-    val sourcesJar by creating(Jar::class) {
-        dependsOn(classes)
-        archiveClassifier.set("sources")
-        from(sourceSets["main"].allSource + sourceSets["testFixtures"].allSource)
-    }
+//    val documentationJar by creating(Jar::class) {
+//        dependsOn(dokkaHtml)
+//        archiveClassifier.set("javadoc")
+//        from(dokkaHtml.get().outputs)
+//    }
+//
+//    val sourcesJar by creating(Jar::class) {
+//        dependsOn(classes)
+//        archiveClassifier.set("sources")
+//        from(sourceSets["main"].allSource + sourceSets["testFixtures"].allSource)
+//    }
 
 //    artifacts {
 //        add("archives", documentationJar)
