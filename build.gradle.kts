@@ -1,23 +1,25 @@
 // configuration variables
 
 val javaTargetVersion = "1.8"
-val defaultGroupId = "com.nftco"
-val defaultVersion = "0.7.1-SNAPSHOT"
-
-// other variables
-
-fun getProp(name: String, defaultValue: String? = null): String? {
-    return project.findProperty("flow.$name")?.toString()?.trim()?.ifBlank { null }
-        ?: project.findProperty(name)?.toString()?.trim()?.ifBlank { null }
-        ?: defaultValue
-}
-
-group = getProp("groupId", defaultGroupId)!!
-version = when {
-    getProp("version") !in setOf("unspecified", null) -> { getProp("version")!! }
-    getProp("snapshotDate") != null -> { "${defaultVersion.replace("-SNAPSHOT", "")}.${getProp("snapshotDate")!!}-SNAPSHOT" }
-    else -> { defaultVersion }
-}
+//val defaultGroupId = "com.nftco"
+//val defaultVersion = "0.7.1-SNAPSHOT"
+//
+//// other variables
+//
+//fun getProp(name: String, defaultValue: String? = null): String? {
+//    return project.findProperty("flow.$name")?.toString()?.trim()?.ifBlank { null }
+//        ?: project.findProperty(name)?.toString()?.trim()?.ifBlank { null }
+//        ?: defaultValue
+//}
+//
+//group = getProp("groupId", defaultGroupId)!!
+//version = when {
+//    getProp("version") !in setOf("unspecified", null) -> getProp("version")!!
+//    getProp("snapshotDate") != null ->
+//        "${defaultVersion.replace("-SNAPSHOT", "")}.${getProp("snapshotDate")!!}-SNAPSHOT"
+//
+//    else -> defaultVersion
+//}
 
 plugins {
     id("org.jetbrains.dokka") version "1.6.10"
@@ -100,9 +102,9 @@ tasks {
     jacocoTestReport {
         dependsOn(test)
         reports {
-            html.isEnabled = true
-            xml.isEnabled = true
-            csv.isEnabled = false
+            html.required.set(true)
+            xml.required.set(true)
+            csv.required.set(false)
         }
     }
 
@@ -137,34 +139,37 @@ tasks {
         from(sourceSets["main"].allSource + sourceSets["testFixtures"].allSource)
     }
 
-    artifacts {
-        add("archives", documentationJar)
-        add("archives", sourcesJar)
-    }
+//    artifacts {
+//        add("archives", documentationJar)
+//        add("archives", sourcesJar)
+//    }
 
-    nexusPublishing {
-        repositories {
-            sonatype {
-                if (getProp("sonatype.nexusUrl") != null) {
-                    nexusUrl.set(uri(getProp("sonatype.nexusUrl")!!))
-                }
-                if (getProp("sonatype.snapshotRepositoryUrl") != null) {
-                    snapshotRepositoryUrl.set(uri(getProp("sonatype.snapshotRepositoryUrl")!!))
-                }
-                if (getProp("sonatype.username") != null) {
-                    username.set(getProp("sonatype.username")!!)
-                }
-                if (getProp("sonatype.password") != null) {
-                    password.set(getProp("sonatype.password")!!)
-                }
-            }
-        }
-    }
+//    nexusPublishing {
+//        repositories {
+//            sonatype {
+//                if (getProp("sonatype.nexusUrl") != null) {
+//                    nexusUrl.set(uri(getProp("sonatype.nexusUrl")!!))
+//                }
+//                if (getProp("sonatype.snapshotRepositoryUrl") != null) {
+//                    snapshotRepositoryUrl.set(uri(getProp("sonatype.snapshotRepositoryUrl")!!))
+//                }
+//                if (getProp("sonatype.username") != null) {
+//                    username.set(getProp("sonatype.username")!!)
+//                }
+//                if (getProp("sonatype.password") != null) {
+//                    password.set(getProp("sonatype.password")!!)
+//                }
+//            }
+//        }
+//    }
 
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
                 from(project.components["java"])
+                groupId = "com.portto"
+                artifactId = "flow-jvm-sdj"
+                version = "0.0.1"
 
 
 //                artifact(documentationJar)
@@ -196,12 +201,12 @@ tasks {
         }
     }
 
-    signing {
-        if (getProp("signing.key") != null) {
-            useInMemoryPgpKeys(getProp("signing.key"), getProp("signing.password"))
-        } else {
-            useGpgCmd()
-        }
-        sign(publishing.publications)
-    }
+//    signing {
+//        if (getProp("signing.key") != null) {
+//            useInMemoryPgpKeys(getProp("signing.key"), getProp("signing.password"))
+//        } else {
+//            useGpgCmd()
+//        }
+//        sign(publishing.publications)
+//    }
 }
