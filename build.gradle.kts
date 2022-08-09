@@ -144,6 +144,10 @@ tasks {
 //        add("archives", sourcesJar)
 //    }
 
+    compileTestFixturesKotlin {
+        enabled = false
+    }
+
 //    nexusPublishing {
 //        repositories {
 //            sonatype {
