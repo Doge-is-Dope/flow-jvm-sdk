@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

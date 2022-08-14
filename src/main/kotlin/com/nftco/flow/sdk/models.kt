@@ -1,6 +1,5 @@
 package com.nftco.flow.sdk
 
-import RLP
 import com.google.protobuf.ByteString
 import com.google.protobuf.UnsafeByteOperations
 import com.nftco.flow.sdk.cadence.EventField
@@ -58,6 +57,7 @@ enum class SignatureAlgorithm(
     UNKNOWN("unknown", "unknown", "unknown", -1, 0),
     ECDSA_P256("ECDSA", "P-256", "ECDSA_P256", 2, 1),
     ECDSA_SECP256k1("ECDSA", "secp256k1", "ECDSA_secp256k1", 3, 2);
+
     companion object {
         @JvmStatic
         fun fromCode(code: Int): SignatureAlgorithm = values()
@@ -81,6 +81,7 @@ enum class HashAlgorithm(
     SHA2_384("SHA-384", 384, "SHA384withECDSA", 1, 2),
     SHA3_256("SHA3-256", 256, "SHA3-256withECDSA", 3, 3),
     SHA3_384("SHA3-384", 384, "SHA3-384withECDSA", 3, 4);
+
     companion object {
         @JvmStatic
         fun fromCode(code: Int): HashAlgorithm = values()
@@ -192,14 +193,15 @@ data class FlowAccountKey(
             .setRevoked(revoked)
     }
 
-    val encoded: ByteArray get() = RLPCodec.encode(
-        arrayOf(
-            publicKey.bytes,
-            signAlgo.code,
-            hashAlgo.code,
-            weight
+    val encoded: ByteArray
+        get() = RLPCodec.encode(
+            arrayOf(
+                publicKey.bytes,
+                signAlgo.code,
+                hashAlgo.code,
+                weight
+            )
         )
-    )
 }
 
 data class FlowEventResult(
@@ -252,6 +254,7 @@ data class FlowEvent(
     val event: EventField get() = payload.jsonCadence as EventField
 
     fun <T : Field<*>> getField(name: String): T? = event[name]
+
     @Suppress("UNCHECKED_CAST")
     operator fun <T> get(name: String): T? = getField<Field<*>>(name) as T
     operator fun contains(name: String): Boolean = name in event
@@ -303,7 +306,13 @@ data class FlowTransactionResult(
     @JvmOverloads
     fun getEventsOfType(type: String, exact: Boolean = false, expectedCount: Int? = null): List<EventField> {
         val ret = this.events
-            .filter { if (exact) { it.type == type } else { it.type.endsWith(type) } }
+            .filter {
+                if (exact) {
+                    it.type == type
+                } else {
+                    it.type.endsWith(type)
+                }
+            }
             .map { it.event }
         check(expectedCount == null || ret.size == expectedCount) { "Expected $expectedCount events of type $type but there were ${ret.size}" }
         return ret
@@ -424,27 +433,29 @@ data class FlowTransaction(
     val canonicalTransaction: ByteArray get() = RLPCodec.encode(transaction)
     val id: FlowId get() = FlowId.of(canonicalTransaction.sha3256Hash())
 
-    val signerList: List<FlowAddress> get() {
-        val ret = mutableListOf<FlowAddress>()
-        val seen = mutableSetOf<FlowAddress>()
-        val addSigner = fun(address: FlowAddress) {
-            if (address in seen) {
-                return
+    val signerList: List<FlowAddress>
+        get() {
+            val ret = mutableListOf<FlowAddress>()
+            val seen = mutableSetOf<FlowAddress>()
+            val addSigner = fun(address: FlowAddress) {
+                if (address in seen) {
+                    return
+                }
+                ret.add(address)
+                seen.add(address)
             }
-            ret.add(address)
-            seen.add(address)
+            addSigner(proposalKey.address)
+            addSigner(payerAddress)
+            authorizers.forEach(addSigner)
+            return ret
         }
-        addSigner(proposalKey.address)
-        addSigner(payerAddress)
-        authorizers.forEach(addSigner)
-        return ret
-    }
 
-    val signerMap: Map<FlowAddress, Int> get() {
-        return signerList.withIndex()
-            .map { it.value to it.index }
-            .toMap()
-    }
+    val signerMap: Map<FlowAddress, Int>
+        get() {
+            return signerList.withIndex()
+                .map { it.value to it.index }
+                .toMap()
+        }
 
     companion object {
         @JvmStatic
@@ -521,7 +532,11 @@ data class FlowTransaction(
     }
 
     fun addEnvelopeSignature(address: FlowAddress, keyIndex: Int, signer: Signer): FlowTransaction {
-        return addEnvelopeSignature(address, keyIndex, FlowSignature(signer.signAsTransaction(canonicalAuthorizationEnvelope)))
+        return addEnvelopeSignature(
+            address,
+            keyIndex,
+            FlowSignature(signer.signAsTransaction(canonicalAuthorizationEnvelope))
+        )
     }
 
     fun addEnvelopeSignature(address: FlowAddress, keyIndex: Int, signature: FlowSignature): FlowTransaction {
@@ -753,7 +768,9 @@ data class FlowAddress private constructor(override val bytes: ByteArray) : Seri
         @JvmStatic
         fun of(bytes: ByteArray): FlowAddress = FlowAddress(fixedSize(bytes, FLOW_ADDRESS_SIZE_BYTES))
     }
+
     constructor(hex: String) : this(fixedSize(hex.hexToBytes(), FLOW_ADDRESS_SIZE_BYTES))
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -797,6 +814,7 @@ data class FlowArgument(override val bytes: ByteArray) : Serializable, BytesHold
 
 data class FlowScript(override val bytes: ByteArray) : Serializable, BytesHolder {
     constructor(script: String) : this(script.encodeToByteArray())
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -838,6 +856,7 @@ data class FlowScriptResponse(override val bytes: ByteArray) : Serializable, Byt
 
 data class FlowSignature(override val bytes: ByteArray) : Serializable, BytesHolder {
     constructor(hex: String) : this(hex.hexToBytes())
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -856,7 +875,9 @@ data class FlowId private constructor(override val bytes: ByteArray) : Serializa
         @JvmStatic
         fun of(bytes: ByteArray): FlowId = FlowId(fixedSize(bytes, FLOW_ID_SIZE_BYTES))
     }
+
     constructor(hex: String) : this(fixedSize(hex.hexToBytes(), FLOW_ID_SIZE_BYTES))
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -886,6 +907,7 @@ data class FlowCode(override val bytes: ByteArray) : Serializable, BytesHolder {
 
 data class FlowPublicKey(override val bytes: ByteArray) : Serializable, BytesHolder {
     constructor(hex: String) : this(hex.hexToBytes())
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

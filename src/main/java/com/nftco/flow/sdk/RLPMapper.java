@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 public class RLPMapper {
     private RLPContext context = RLPContext.EMPTY;
 

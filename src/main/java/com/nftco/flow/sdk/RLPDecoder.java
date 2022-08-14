@@ -1,9 +1,11 @@
+package com.nftco.flow.sdk;
+
 import lombok.NonNull;
 
 public interface RLPDecoder<T> {
     /**
      *
-     * @param element the element may equals to RLPItem.NULL
+     * @param element the element may equals to com.nftco.flow.sdk.RLPItem.NULL
      * @return
      */
     T decode(@NonNull RLPElement element);

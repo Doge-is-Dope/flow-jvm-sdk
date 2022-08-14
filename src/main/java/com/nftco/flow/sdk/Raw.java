@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import lombok.Builder;
 
 import java.util.Collection;

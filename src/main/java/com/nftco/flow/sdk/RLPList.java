@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import java.math.BigInteger;
 import java.util.*;
 import java.util.function.UnaryOperator;

@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -46,7 +48,7 @@ final class RLPUtils {
                 .filter(x -> {
                     if (x.isAnnotationPresent(RLPIgnored.class)) {
                         if (x.isAnnotationPresent(RLP.class))
-                            throw new RuntimeException(x.getName() + " is both annotated with @RLP and @RLPIgnored");
+                            throw new RuntimeException(x.getName() + " is both annotated with @com.nftco.flow.sdk.RLP and @com.nftco.flow.sdk.RLPIgnored");
                         return false;
                     }
                     return true;
@@ -68,7 +70,7 @@ final class RLPUtils {
         }
         for (int i = 0; i < annotated.size(); i++) {
             if (annotated.get(i).getAnnotation(RLP.class).value() != i)
-                throw new RuntimeException(String.format("field %s of class %s should have RLP(%d)", annotated.get(i), clazz, i));
+                throw new RuntimeException(String.format("field %s of class %s should have com.nftco.flow.sdk.RLP(%d)", annotated.get(i), clazz, i));
         }
         Map<Class, List<Field>> tmp = new HashMap<>(FIELDS);
         annotated.forEach(f -> f.setAccessible(true));
@@ -96,7 +98,7 @@ final class RLPUtils {
         Class<? extends Comparator> clazz = field.getAnnotation(RLPEncoding.class).keyOrdering();
         if (clazz == RLPEncoding.None.class) return null;
         if (!Map.class.isAssignableFrom(field.getType()) && !Set.class.isAssignableFrom(field.getType()))
-            throw new RuntimeException("@RLPEncoding.keyOrdering() is used on Map or Set other than "
+            throw new RuntimeException("@com.nftco.flow.sdk.RLPEncoding.keyOrdering() is used on Map or Set other than "
                     + field.getName() + " "
                     + field.getType().getName());
         return getInstance(clazz);

@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import java.util.Arrays;
 
 // reduce byte array copy by lazy loading

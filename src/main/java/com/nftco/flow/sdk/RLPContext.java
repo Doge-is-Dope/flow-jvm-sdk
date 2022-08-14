@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import java.util.Collections;
 
 public interface RLPContext {

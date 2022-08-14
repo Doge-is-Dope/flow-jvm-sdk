@@ -1,3 +1,5 @@
+package com.nftco.flow.sdk;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
@@ -5,13 +7,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * The RLP encoding function takes in an item. An item is defined as follows
+ * The com.nftco.flow.sdk.RLP encoding function takes in an item. An item is defined as follows
  * <p>
  * A string (ie. byte array) is an item
  * A list of items is an item
- * RLP could encode tree-like object
- * RLP cannot determine difference between null reference and emtpy byte array
- * RLP cannot determine whether a box type is null or zero, e.g. Byte, Short, Integer, Long, BigInteger
+ * com.nftco.flow.sdk.RLP could encode tree-like object
+ * com.nftco.flow.sdk.RLP cannot determine difference between null reference and emtpy byte array
+ * com.nftco.flow.sdk.RLP cannot determine whether a box type is null or zero, e.g. Byte, Short, Integer, Long, BigInteger
  */
 public interface RLPElement {
     static RLPElement fromEncoded(byte[] data) {
