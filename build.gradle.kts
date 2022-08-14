@@ -46,8 +46,9 @@ dependencies {
 
     api("org.onflow:flow:0.21")
 
-    api("com.github.TrustedDataFramework:java-rlp:1.1.20")
-
+//    api("com.github.TrustedDataFramework:java-rlp:1.1.20")
+    implementation("org.projectlombok:lombok:1.18.24")
+    annotationProcessor("org.projectlombok:lombok:1.18.24")
     api("org.bouncycastle:bcpkix-jdk15on:1.69")
 
     api(platform("com.fasterxml.jackson:jackson-bom:2.12.2"))
