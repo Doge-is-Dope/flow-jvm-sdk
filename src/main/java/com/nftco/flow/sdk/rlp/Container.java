@@ -1,4 +1,4 @@
-package com.nftco.flow.sdk;
+package com.nftco.flow.sdk.rlp;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -31,9 +31,9 @@ public interface Container<V> {
         }
         if (clazz == null || clazz == Void.class) return container;
         if (!Collection.class.isAssignableFrom(clazz) && !Map.class.isAssignableFrom(clazz))
-            throw new RuntimeException("@com.nftco.flow.sdk.RLPDecoding.as must be a collection of map type while " + clazz.getName() + " found");
+            throw new RuntimeException("@com.nftco.flow.sdk.rlp.RLPDecoding.as must be a collection of map type while " + clazz.getName() + " found");
         if (container.getType() == ContainerType.RAW)
-            throw new RuntimeException("@com.nftco.flow.sdk.RLPDecoding.as is used on collection or map typed field other than " + field.getName());
+            throw new RuntimeException("@com.nftco.flow.sdk.rlp.RLPDecoding.as is used on collection or map typed field other than " + field.getName());
         if (!field.getType().isAssignableFrom(clazz))
             throw new RuntimeException("cannot assign " + clazz + " to " + field.getType());
         if (container.getType() == ContainerType.COLLECTION) {

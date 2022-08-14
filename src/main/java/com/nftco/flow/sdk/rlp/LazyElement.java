@@ -1,4 +1,4 @@
-package com.nftco.flow.sdk;
+package com.nftco.flow.sdk.rlp;
 
 import java.math.BigInteger;
 
